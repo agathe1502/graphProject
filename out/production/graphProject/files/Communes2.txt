@@ -1,0 +1,23 @@
+File name : Communes2.txt
+Number of vertex : 17
+--- Vertex --- 
+0 nice
+1 marseille
+2 dijon
+3 toulouse
+4 bordeaux
+5 montpellier
+6 rennes
+7 grenoble
+8 saint-etienne
+9 nantes
+10 reims
+11 lille
+12 strasbourg
+13 lyon
+14 paris
+15 havre
+16 toulon
+--- Edges --- 
+0 1 16 49,43
+1 8 13 49,96

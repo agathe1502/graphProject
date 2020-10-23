@@ -1,0 +1,6 @@
+File name : Communes_50_500000.txt
+Number of vertex : 2
+--- Vertex --- 
+0 marseille
+1 paris
+--- Edges --- 
