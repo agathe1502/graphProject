@@ -6,14 +6,15 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        int dmax = 50;
-        int popmin = 5000;
+        int dmax = 200;
+        int popmin = 200000;
         int srcVertex = 1;
         int endVertex = 2;
 
-        dijkstra(dmax, popmin, srcVertex, endVertex);
-        dijkstraFibo(dmax, popmin, srcVertex, endVertex);
-        VRP1();
+        //dijkstra(dmax, popmin, srcVertex, endVertex);
+        //dijkstraFibo(dmax, popmin, srcVertex, endVertex);
+        //VRP1();
+        Astar(dmax, popmin, srcVertex, endVertex);
 
 
     }
@@ -64,9 +65,25 @@ public class Main {
         System.out.println("Distance : " + df.getDistance(graph.getVertices().get(endVertex)) + " km");
     }
 
+    private static void Astar(int dmax, int popmin, int srcVertex, int endVertex) throws IOException{
+        CSVtoTXT fileCSV = new CSVtoTXT();
+
+        // boolean createFile = existance de fileName
+        String fileName = "src/files/Communes_" + dmax + "_" + popmin + ".txt";
+        File file = new File(fileName);
+        fileCSV.fileConversion(dmax, popmin, !file.isFile());
+
+        Graph graph = new Graph(fileName);
+        graph.createAdjacentList();
+        graph.displayAdjacentList();
+        Astar as = new Astar(graph, graph.getVertices().get(srcVertex), graph.getVertices().get(endVertex), fileCSV.getCoordinates());
+        as.runAlgorithm();
+    }
+
     private static void VRP1() throws IOException {
         VRP1 vrp = new VRP1();
         vrp.runAlgorithm();
+        System.out.println("-------------------");
         vrp.displayResults();
     }
 
