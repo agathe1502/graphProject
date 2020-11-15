@@ -6,12 +6,12 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        int dmax = 200;
-        int popmin = 200000;
+        int dmax = 100;
+        int popmin = 50000;
         int srcVertex = 1;
         int endVertex = 2;
 
-        //dijkstra(dmax, popmin, srcVertex, endVertex);
+        dijkstra(dmax, popmin, srcVertex, endVertex);
         //dijkstraFibo(dmax, popmin, srcVertex, endVertex);
         //VRP1();
         Astar(dmax, popmin, srcVertex, endVertex);
@@ -75,9 +75,17 @@ public class Main {
 
         Graph graph = new Graph(fileName);
         graph.createAdjacentList();
-        graph.displayAdjacentList();
+
         Astar as = new Astar(graph, graph.getVertices().get(srcVertex), graph.getVertices().get(endVertex), fileCSV.getCoordinates());
+        long startTime3 = System.nanoTime();
         as.runAlgorithm();
+        long endTime3 = System.nanoTime();
+        long timeElapsed3 = endTime3 - startTime3;
+        System.out.println("-------------------");
+        System.out.println("Astar : Execution time: " + (timeElapsed3 / 1000000.0) + " ms");
+    System.out.print("Path :");
+        System.out.println(as.getPath(graph.getVertices().get(endVertex)));
+        System.out.println("Distance : " + as.getDistance(graph.getVertices().get(endVertex)) + " km");
     }
 
     private static void VRP1() throws IOException {

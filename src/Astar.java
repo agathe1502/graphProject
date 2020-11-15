@@ -1,19 +1,20 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Astar {
 
-    private Graph graph;
-    private Vertex startVertex;
-    private Vertex endVertex;
-    private ArrayList<Vertex> vertices;
-    private HashMap<Integer, double[]> coordinates;
-    private double[] f; // f = g+h
-    private double[] g;
-    private double[] h;
-    private ArrayList<Vertex> openList;
-    private boolean[] isUsedTab;
-    private Vertex[] pathArray;
+    private final Graph graph;
+    private final Vertex startVertex;
+    private final Vertex endVertex;
+    private final ArrayList<Vertex> vertices;
+    private final HashMap<Integer, double[]> coordinates;
+    private final double[] f; // f = g+h
+    private final double[] g;
+    private final double[] h;
+    private final ArrayList<Vertex> openList;
+    private final boolean[] isUsedTab;
+    private final Vertex[] pathArray;
     private boolean success;
 
 
@@ -37,18 +38,31 @@ public class Astar {
         analyzeUnmarkedVertices();
     }
 
+    public double getDistance(Vertex endVertex){
+        return f[endVertex.getId()];
+    }
+
+    public ArrayList<String> getPath(Vertex endVertex) {
+        ArrayList<String> path = new ArrayList<>();
+        Vertex v = endVertex;
+        path.add(endVertex.getName());
+        while(pathArray[v.getId()] != null){
+            v = pathArray[v.getId()];
+            path.add(v.getName());
+        }
+        Collections.reverse(path);
+        return path;
+    }
+
     private void initialization() {
         openList.add(startVertex);
         isUsedTab[startVertex.getId()] = true;
 
         for (Vertex v : vertices) {
-           // if (!isUsedTab[v.getId()]) {
-                g[v.getId()] = getValueDistance(startVertex, v);
-                h[v.getId()] = distance(v, endVertex);
-                f[v.getId()] = g[v.getId()] + h[v.getId()];
-            //}
+            g[v.getId()] = getValueDistance(startVertex, v);
+            h[v.getId()] = distance(v, endVertex);
+            f[v.getId()] = g[v.getId()] + h[v.getId()];
         }
-        displayTab(f);
     }
 
     private void  analyzeUnmarkedVertices() {
@@ -101,11 +115,9 @@ public class Astar {
                 if (!isUsedTab[otherVertexId] && !openList.contains(vertices.get(otherVertexId))) {
                     openList.add(vertices.get(otherVertexId));
                     pathArray[otherVertexId] = vertices.get(min);
-                    //Edge edge = graph.getEdges().get(edgeId);
                     modifyDistance(min, edge);
                 }
                 else {
-                    //Edge edge = graph.getEdges().get(edgeId);
                     if (g[otherVertexId] > g[min] + getValueDistance(vertices.get(min), vertices.get(otherVertexId))) {
                         pathArray[otherVertexId] = vertices.get(min);
                         modifyDistance(min, edge);
@@ -137,13 +149,6 @@ public class Astar {
         if (value != -1) {
             g[vertexSuccessorId] = g[min] + value;
             f[vertexSuccessorId] = g[vertexSuccessorId] + h[vertexSuccessorId];
-            displayTab(f);
-        }
-    }
-
-    private void displayTab (double[] tab) {
-        for (int i = 0; i<tab.length; i++){
-            System.out.print(tab[i] + " ; ");
         }
     }
 }
