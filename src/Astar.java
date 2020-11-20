@@ -1,8 +1,7 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
-public class Astar {
+public class Astar extends ShortestPathAlgorithm {
 
     private final Graph graph;
     private final Vertex startVertex;
@@ -38,20 +37,8 @@ public class Astar {
         analyzeUnmarkedVertices();
     }
 
-    public double getDistance(Vertex endVertex){
+    public double getDistance(Vertex endVertex) {
         return f[endVertex.getId()];
-    }
-
-    public ArrayList<String> getPath(Vertex endVertex) {
-        ArrayList<String> path = new ArrayList<>();
-        Vertex v = endVertex;
-        path.add(endVertex.getName());
-        while(pathArray[v.getId()] != null){
-            v = pathArray[v.getId()];
-            path.add(v.getName());
-        }
-        Collections.reverse(path);
-        return path;
     }
 
     private void initialization() {
@@ -61,11 +48,12 @@ public class Astar {
         for (Vertex v : vertices) {
             g[v.getId()] = getValueDistance(startVertex, v);
             h[v.getId()] = distance(v, endVertex);
+            //h[v.getId()] = graph.getValueByVertices(v, endVertex);
             f[v.getId()] = g[v.getId()] + h[v.getId()];
         }
     }
 
-    private void  analyzeUnmarkedVertices() {
+    private void analyzeUnmarkedVertices() {
         while (openList.size() > 0 && !success) {
             int min = getIndexOfMin(f, openList);
             Vertex x = vertices.get(min);
@@ -116,8 +104,7 @@ public class Astar {
                     openList.add(vertices.get(otherVertexId));
                     pathArray[otherVertexId] = vertices.get(min);
                     modifyDistance(min, edge);
-                }
-                else {
+                } else {
                     if (g[otherVertexId] > g[min] + getValueDistance(vertices.get(min), vertices.get(otherVertexId))) {
                         pathArray[otherVertexId] = vertices.get(min);
                         modifyDistance(min, edge);
@@ -145,7 +132,7 @@ public class Astar {
         int vertexSuccessorId = edge.getOtherVertex(min);
         Vertex vertexSuccessor = vertices.get(vertexSuccessorId);
 
-        double value = getValueDistance(x,vertexSuccessor);
+        double value = getValueDistance(x, vertexSuccessor);
         if (value != -1) {
             g[vertexSuccessorId] = g[min] + value;
             f[vertexSuccessorId] = g[vertexSuccessorId] + h[vertexSuccessorId];

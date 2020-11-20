@@ -1,57 +1,42 @@
 import org.jgrapht.util.FibonacciHeap;
 import org.jgrapht.util.FibonacciHeapNode;
 
-import java.util.ArrayList;
-import java.util.Collections;
+public class DijkstraFibonacciHeap extends DijkstraAlgorithm {
 
-public class DijkstraFibonacciHeap {
 
-    private Graph G;
-    private Vertex startVertex;
-    private double[] lembda;
-    private ArrayList<Vertex> vertices;
-    private ArrayList<Vertex> Z;
-    private boolean[] isUsedTab;
-    private FibonacciHeap<Vertex> fibonacciHeap;
-    private FibonacciHeapNode[] fiboHeadNodeTab;
-    private Vertex[] pathArray;
+    /**
+     * Le tas de Fibonacci composé de la manière suivante :
+     * - en clé : la valeur du sommet
+     * - en valeur : le sommet du graphe
+     */
+    private static FibonacciHeap<Vertex> fibonacciHeap;
+    /**
+     * La liste des noeuds utilisés dans le tas de Fibonacci
+     */
+    private static FibonacciHeapNode[] fiboHeadNodeTab;
 
-    public DijkstraFibonacciHeap(Graph G, Vertex startVertex){
-        this.G = G;
-        this.startVertex = startVertex;
-        this.lembda = new double[G.getVertices().size()];
-        this.vertices = G.getVertices();
-        this.Z = (ArrayList<Vertex>) vertices.clone();
-        this.isUsedTab = new boolean[G.getVertices().size()];
-        this.fibonacciHeap = new FibonacciHeap<>();
-        this.fiboHeadNodeTab = new FibonacciHeapNode[G.getVertices().size()];
-        this.pathArray = new Vertex[vertices.size()];
+    /**
+     * Constructeur de l'algorithme
+     *
+     * @param G           le graphe auquel il va être appliqué
+     * @param startVertex le sommet de référence
+     */
+    public DijkstraFibonacciHeap(Graph G, Vertex startVertex) {
+        super(G, startVertex);
+        fibonacciHeap = new FibonacciHeap<>();
+        fiboHeadNodeTab = new FibonacciHeapNode[G.getVertices().size()];
     }
 
-    public double[] runAlgorithm(){
-        initialization();
-        analyzeUnmarkedVertices();
-        return lembda;
-    }
-
-    public ArrayList<String> getPath(Vertex endVertex) {
-        ArrayList<String> path = new ArrayList<>();
-        Vertex v = endVertex;
-        path.add(endVertex.getName());
-        while(pathArray[v.getId()] != null){
-            v = pathArray[v.getId()];
-            path.add(v.getName());
-        }
-        Collections.reverse(path);
-        return path;
-    }
-
-
-    public double getDistance(Vertex endVertex){
-        return lembda[endVertex.getId()];
-    }
-
-    private void initialization(){
+    /**
+     * Phase d'initialisation de l'algorithme.
+     * - initialiser 0 comme distance entre le point de référence et lui même.
+     * - initialise +INFINI pour les autres sommets
+     * - Indique le sommet de départ comme sommet parent pour chacun des autres sommets du graphe
+     * - Initialise +INFINI dans le tas de fibonacci à chacun des sommets
+     * - Initialise la liste des noeuds du tas de fibonacci
+     */
+    @Override
+    protected void initialization() {
         lembda[startVertex.getId()] = 0;
         Z.remove(startVertex);
         isUsedTab[startVertex.getId()] = true;
@@ -73,7 +58,14 @@ public class DijkstraFibonacciHeap {
 
     }
 
-    private void analyzeUnmarkedVertices(){
+    /**
+     * Phase qui boucle sur la liste des sommets dont la distance la plus court n'est pas encore determinée.
+     * Pour chaque itération elle va :
+     * - rechercher le sommet qui a la distance minimale, parmi ceux non traités
+     * - analyser ses arcs adjacents (pour mettre à jour la valeur des sommets finaux)
+     */
+    @Override
+    protected void analyzeUnmarkedVertices() {
         while (Z.size() > 0) { // analyse unmarked vertices
             int min = fibonacciHeap.min().getData().getId();
             fibonacciHeap.removeMin();
@@ -84,21 +76,15 @@ public class DijkstraFibonacciHeap {
         }
     }
 
-    private void analyzeAdjacentsEdges(int min){
-        int loop = 0;
-        for (Integer edgeId : G.getAdjacentList().get(min)) { // analyze adjacent edges
-            // the first one is the Vertex Id
-            if (loop != 0) {
-                // we have edges adjacent to the vertex x
-                // we get from each edge the vertex which is not x
-                Edge edge = G.getEdges().get(edgeId);
-                modifyDistance(edge, min);
-            }
-            loop++;
-        }
-    }
 
-    public void modifyDistance(Edge edge, int min){
+    /**
+     * Méthode qui permet de mettre à jour la distance des sommets de fin d'un arc donné
+     *
+     * @param edge l'arc dont il va falloir mettre à jour la distance de son sommet de fin
+     * @param min  l'id du sommet de départ de l'arc (pour pouvoir déterminer quel est le sommet de fin de l'arc)
+     */
+    @Override
+    protected void modifyDistance(Edge edge, int min) {
         Vertex x = vertices.get(min);
         int otherVertexId = edge.getOtherVertex(min);
         Vertex otherVertex = vertices.get(otherVertexId);
@@ -114,7 +100,6 @@ public class DijkstraFibonacciHeap {
                     fibonacciHeap.decreaseKey(fiboHeadNodeTab[otherVertexId], lembda[min] + value);
                 }
             }
-
         }
     }
 }

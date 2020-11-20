@@ -41,13 +41,11 @@ import java.util.Stack;
  * This class was originally developed by Nathan Fiedler for the GraphMaker project. It was imported
  * to JGraphT with permission, courtesy of Nathan Fiedler.
  * </p>
- * 
- * @param <T> node data type
  *
+ * @param <T> node data type
  * @author Nathan Fiedler
  */
-public class FibonacciHeap<T>
-{
+public class FibonacciHeap<T> {
     private static final double ONEOVERLOGPHI = 1.0 / Math.log((1.0 + Math.sqrt(5.0)) / 2.0);
 
     /**
@@ -63,9 +61,50 @@ public class FibonacciHeap<T>
     /**
      * Constructs a FibonacciHeap object that contains no elements.
      */
-    public FibonacciHeap()
-    {
+    public FibonacciHeap() {
     } // FibonacciHeap
+
+    /**
+     * Joins two Fibonacci heaps into a new one. No heap consolidation is performed at this time.
+     * The two root lists are simply joined together.
+     *
+     * <p>
+     * Running time: O(1) actual
+     * </p>
+     *
+     * @param h1  first heap
+     * @param h2  second heap
+     * @param <T> type of data stored in the heap
+     * @return new heap containing h1 and h2
+     */
+    public static <T> FibonacciHeap<T> union(FibonacciHeap<T> h1, FibonacciHeap<T> h2) {
+        FibonacciHeap<T> h = new FibonacciHeap<>();
+
+        if ((h1 != null) && (h2 != null)) {
+            h.minNode = h1.minNode;
+
+            if (h.minNode != null) {
+                if (h2.minNode != null) {
+                    h.minNode.right.left = h2.minNode.left;
+                    h2.minNode.left.right = h.minNode.right;
+                    h.minNode.right = h2.minNode;
+                    h2.minNode.left = h.minNode;
+
+                    if (h2.minNode.key < h1.minNode.key) {
+                        h.minNode = h2.minNode;
+                    }
+                }
+            } else {
+                h.minNode = h2.minNode;
+            }
+
+            h.nNodes = h1.nNodes + h2.nNodes;
+        }
+
+        return h;
+    }
+
+    // isEmpty
 
     /**
      * Tests if the Fibonacci heap is empty or not. Returns true if the heap is empty, false
@@ -77,23 +116,21 @@ public class FibonacciHeap<T>
      *
      * @return true if the heap is empty, false otherwise
      */
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return minNode == null;
     }
 
-    // isEmpty
+    // clear
 
     /**
      * Removes all elements from this heap.
      */
-    public void clear()
-    {
+    public void clear() {
         minNode = null;
         nNodes = 0;
     }
 
-    // clear
+    // decreaseKey
 
     /**
      * Decreases the key value for a heap node, given the new value to take on. The structure of the
@@ -105,14 +142,12 @@ public class FibonacciHeap<T>
      *
      * @param x node to decrease the key of
      * @param k new key value for node x
-     *
-     * @exception IllegalArgumentException Thrown if k is larger than x.key value.
+     * @throws IllegalArgumentException Thrown if k is larger than x.key value.
      */
-    public void decreaseKey(FibonacciHeapNode<T> x, double k)
-    {
+    public void decreaseKey(FibonacciHeapNode<T> x, double k) {
         if (k > x.key) {
             throw new IllegalArgumentException(
-                "decreaseKey() got larger key value. Current key: " + x.key + " new key: " + k);
+                    "decreaseKey() got larger key value. Current key: " + x.key + " new key: " + k);
         }
 
         if (x.right == null) {
@@ -133,7 +168,7 @@ public class FibonacciHeap<T>
         }
     }
 
-    // decreaseKey
+    // delete
 
     /**
      * Deletes a node from the heap given the reference to the node. The trees in the heap will be
@@ -146,8 +181,7 @@ public class FibonacciHeap<T>
      *
      * @param x node to remove from heap
      */
-    public void delete(FibonacciHeapNode<T> x)
-    {
+    public void delete(FibonacciHeapNode<T> x) {
         // make x as small as possible
         decreaseKey(x, Double.NEGATIVE_INFINITY);
 
@@ -155,7 +189,7 @@ public class FibonacciHeap<T>
         removeMin();
     }
 
-    // delete
+    // insert
 
     /**
      * Inserts a new data element into the heap. No heap consolidation is performed at this time,
@@ -166,11 +200,10 @@ public class FibonacciHeap<T>
      * </p>
      *
      * @param node new node to insert into heap
-     * @param key key value associated with data object
+     * @param key  key value associated with data object
      * @throws IllegalArgumentException if the node already belongs to a heap
      */
-    public void insert(FibonacciHeapNode<T> node, double key)
-    {
+    public void insert(FibonacciHeapNode<T> node, double key) {
         if (node.right != null) {
             throw new IllegalArgumentException("Invalid heap node");
         }
@@ -196,7 +229,7 @@ public class FibonacciHeap<T>
         nNodes++;
     }
 
-    // insert
+    // min
 
     /**
      * Returns the smallest element in the heap. This smallest element is the one with the minimum
@@ -208,12 +241,11 @@ public class FibonacciHeap<T>
      *
      * @return heap node with the smallest key
      */
-    public FibonacciHeapNode<T> min()
-    {
+    public FibonacciHeapNode<T> min() {
         return minNode;
     }
 
-    // min
+    // removeMin
 
     /**
      * Removes the smallest element from the heap. This will cause the trees in the heap to be
@@ -225,8 +257,7 @@ public class FibonacciHeap<T>
      *
      * @return node with the smallest key
      */
-    public FibonacciHeapNode<T> removeMin()
-    {
+    public FibonacciHeapNode<T> removeMin() {
         FibonacciHeapNode<T> z = minNode;
 
         if (z != null) {
@@ -279,7 +310,7 @@ public class FibonacciHeap<T>
         return z;
     }
 
-    // removeMin
+    // size
 
     /**
      * Returns the size of the heap which is measured in the number of elements contained in the
@@ -291,53 +322,8 @@ public class FibonacciHeap<T>
      *
      * @return number of elements in the heap
      */
-    public int size()
-    {
+    public int size() {
         return nNodes;
-    }
-
-    // size
-
-    /**
-     * Joins two Fibonacci heaps into a new one. No heap consolidation is performed at this time.
-     * The two root lists are simply joined together.
-     *
-     * <p>
-     * Running time: O(1) actual
-     * </p>
-     *
-     * @param h1 first heap
-     * @param h2 second heap
-     * @param <T> type of data stored in the heap
-     *
-     * @return new heap containing h1 and h2
-     */
-    public static <T> FibonacciHeap<T> union(FibonacciHeap<T> h1, FibonacciHeap<T> h2)
-    {
-        FibonacciHeap<T> h = new FibonacciHeap<>();
-
-        if ((h1 != null) && (h2 != null)) {
-            h.minNode = h1.minNode;
-
-            if (h.minNode != null) {
-                if (h2.minNode != null) {
-                    h.minNode.right.left = h2.minNode.left;
-                    h2.minNode.left.right = h.minNode.right;
-                    h.minNode.right = h2.minNode;
-                    h2.minNode.left = h.minNode;
-
-                    if (h2.minNode.key < h1.minNode.key) {
-                        h.minNode = h2.minNode;
-                    }
-                }
-            } else {
-                h.minNode = h2.minNode;
-            }
-
-            h.nNodes = h1.nNodes + h2.nNodes;
-        }
-
-        return h;
     }
 
     // union
@@ -348,8 +334,7 @@ public class FibonacciHeap<T>
      * @return String of this.
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         if (minNode == null) {
             return "FibonacciHeap=[]";
         }
@@ -403,8 +388,7 @@ public class FibonacciHeap<T>
      *
      * @param y node to perform cascading cut on
      */
-    protected void cascadingCut(FibonacciHeapNode<T> y)
-    {
+    protected void cascadingCut(FibonacciHeapNode<T> y) {
         FibonacciHeapNode<T> z = y.parent;
 
         // if there's a parent...
@@ -427,8 +411,7 @@ public class FibonacciHeap<T>
     /**
      * Consolidate trees
      */
-    protected void consolidate()
-    {
+    protected void consolidate() {
         int arraySize = ((int) Math.floor(Math.log(nNodes) * ONEOVERLOGPHI)) + 1;
 
         List<FibonacciHeapNode<T>> array = new ArrayList<>(arraySize);
@@ -459,7 +442,7 @@ public class FibonacciHeap<T>
             FibonacciHeapNode<T> next = x.right;
 
             // ..and see if there's another of the same degree.
-            for (;;) {
+            for (; ; ) {
                 FibonacciHeapNode<T> y = array.get(d);
                 if (y == null) {
                     // Nope.
@@ -536,8 +519,7 @@ public class FibonacciHeap<T>
      * @param x child of y to be removed from y's child list
      * @param y parent of x about to lose a child
      */
-    protected void cut(FibonacciHeapNode<T> x, FibonacciHeapNode<T> y)
-    {
+    protected void cut(FibonacciHeapNode<T> x, FibonacciHeapNode<T> y) {
         // remove x from childlist of y and decrement degree[y]
         x.left.right = x.right;
         x.right.left = x.left;
@@ -577,8 +559,7 @@ public class FibonacciHeap<T>
      * @param y node to become child
      * @param x node to become parent
      */
-    protected void link(FibonacciHeapNode<T> y, FibonacciHeapNode<T> x)
-    {
+    protected void link(FibonacciHeapNode<T> y, FibonacciHeapNode<T> x) {
         // remove y from root list of heap
         y.left.right = y.right;
         y.right.left = y.left;

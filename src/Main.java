@@ -6,13 +6,13 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        int dmax = 100;
-        int popmin = 50000;
+        int dmax = 50;
+        int popmin = 5000;
         int srcVertex = 1;
-        int endVertex = 2;
+        int endVertex = 50;
 
         dijkstra(dmax, popmin, srcVertex, endVertex);
-        //dijkstraFibo(dmax, popmin, srcVertex, endVertex);
+        dijkstraFibo(dmax, popmin, srcVertex, endVertex);
         //VRP1();
         Astar(dmax, popmin, srcVertex, endVertex);
 
@@ -65,7 +65,7 @@ public class Main {
         System.out.println("Distance : " + df.getDistance(graph.getVertices().get(endVertex)) + " km");
     }
 
-    private static void Astar(int dmax, int popmin, int srcVertex, int endVertex) throws IOException{
+    private static void Astar(int dmax, int popmin, int srcVertex, int endVertex) throws IOException {
         CSVtoTXT fileCSV = new CSVtoTXT();
 
         // boolean createFile = existance de fileName
@@ -83,7 +83,7 @@ public class Main {
         long timeElapsed3 = endTime3 - startTime3;
         System.out.println("-------------------");
         System.out.println("Astar : Execution time: " + (timeElapsed3 / 1000000.0) + " ms");
-    System.out.print("Path :");
+        System.out.print("Path :");
         System.out.println(as.getPath(graph.getVertices().get(endVertex)));
         System.out.println("Distance : " + as.getDistance(graph.getVertices().get(endVertex)) + " km");
     }
