@@ -11,18 +11,25 @@ public class Main {
         int srcVertex = 1;
         int endVertex = 50;
 
+        createdFile(dmax, popmin);
         dijkstra(dmax, popmin, srcVertex, endVertex);
         dijkstraFibo(dmax, popmin, srcVertex, endVertex);
         //VRP1();
         Astar(dmax, popmin, srcVertex, endVertex);
 
+    }
 
+    private static void createdFile (int dmax, int popmin) throws IOException {
+        CSVtoTXT fileCSV = new CSVtoTXT();
+
+        String fileName = "src/files/Communes_" + dmax + "_" + popmin + ".txt";
+        File file = new File(fileName);
+        fileCSV.fileConversion(dmax, popmin, !file.isFile());
     }
 
     private static Graph initializeDijkstra(int dmax, int popmin) throws IOException {
         CSVtoTXT fileCSV = new CSVtoTXT();
 
-        // boolean createFile = existance de fileName
         String fileName = "src/files/Communes_" + dmax + "_" + popmin + ".txt";
         File file = new File(fileName);
         fileCSV.fileConversion(dmax, popmin, !file.isFile());

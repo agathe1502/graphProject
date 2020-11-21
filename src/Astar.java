@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Classe qui permet de lancer l'algorithme A* sur un graphe (avec un sommet initial et un sommet final)
+ */
 public class Astar extends ShortestPathAlgorithm {
 
     private final Graph graph;
@@ -13,7 +16,6 @@ public class Astar extends ShortestPathAlgorithm {
     private final double[] h;
     private final ArrayList<Vertex> openList;
     private final boolean[] isUsedTab;
-    private final Vertex[] pathArray;
     private boolean success;
 
 
@@ -28,7 +30,7 @@ public class Astar extends ShortestPathAlgorithm {
         this.h = new double[graph.getVertices().size()];
         this.isUsedTab = new boolean[graph.getVertices().size()];
         this.openList = new ArrayList<>();
-        this.pathArray = new Vertex[vertices.size()];
+        pathArray = new Vertex[vertices.size()];
         this.success = false;
     }
 
@@ -48,7 +50,6 @@ public class Astar extends ShortestPathAlgorithm {
         for (Vertex v : vertices) {
             g[v.getId()] = getValueDistance(startVertex, v);
             h[v.getId()] = distance(v, endVertex);
-            //h[v.getId()] = graph.getValueByVertices(v, endVertex);
             f[v.getId()] = g[v.getId()] + h[v.getId()];
         }
     }
