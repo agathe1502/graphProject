@@ -41,8 +41,8 @@ public class Dijkstra extends DijkstraAlgorithm {
     }
 
     /**
-     * Phase qui boucle sur la liste des sommets dont la distance la plus court n'est pas encore determinée.
-     * Pour chaque itération elle va :
+     * Phase qui boucle sur la liste des sommets dont la distance la plus courte n'est pas encore determinée.
+     * Pour chaque itération, elle va :
      * - rechercher le sommet qui a la distance minimale, parmi ceux non traités
      * - analyser ses arcs adjacents (pour mettre à jour la valeur des sommets finaux)
      */

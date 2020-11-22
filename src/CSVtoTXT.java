@@ -23,6 +23,7 @@ public class CSVtoTXT {
         if (createFile) {
             writeFile(dmax, popmin);
             // writeFileVRP1();
+            // writeFileVRP2(popmin);
         } else {
             createCoordinates();
         }
@@ -71,12 +72,6 @@ public class CSVtoTXT {
                 }
             }
         }
-        /*
-        Path path = Paths.get("files\\" + filename);
-        List<String> lines = Files.readAllLines(path);
-        lines.add(2, "Number of edges : " + nbEdge);
-        Files.write(path, lines);
-        */
         fw.flush();
         fw.close();
 
@@ -84,6 +79,55 @@ public class CSVtoTXT {
         System.out.println("Number of Edge : " + nbEdge);
 
     }
+
+    private void writeFileVRP2(int popmin) throws IOException {
+        String filename = "File_VRP2_" + popmin + ".txt";
+        FileWriter fw = new FileWriter("src/files/" + filename);
+
+        //Write into file
+        fw.write("File name : " + filename + "\n");
+        fw.write("Number of vertex : " + listCity.size() + "\n");
+
+        fw.write("--- Vertex --- " + "\n");
+        for (int i = 0; i < listCity.size(); i++) {
+            fw.write(i + " " + listCity.get(i)[1] + "\n");
+        }
+
+        fw.write("--- Edges --- " + "\n");
+        int nbEdge = 0;
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.HALF_UP);
+
+        for (int i = 0; i < listCity.size(); i++) {
+            double longitude = Double.parseDouble(listCity.get(i)[4]);
+            double latitude = Double.parseDouble(listCity.get(i)[5]);
+            double lon1 = Math.toRadians(longitude);
+            double lat1 = Math.toRadians(latitude);
+            coordinates.put(i, new double[]{longitude, latitude});
+            for (int j = 0; j < listCity.size(); j++) {
+                double lon2 = Math.toRadians(Double.parseDouble(listCity.get(j)[4]));
+                double lat2 = Math.toRadians(Double.parseDouble(listCity.get(j)[5]));
+
+                double d = Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1);
+                if (d <= 1.0) {
+                    d = Math.acos(d) * 6378.137;
+                } else {
+                    d = 0;
+                }
+                if (i != j) {
+                    fw.write(nbEdge + " " + i + " " + j + " " + df.format(d) + "\n");
+                    nbEdge++;
+                }
+
+            }
+        }
+        fw.flush();
+        fw.close();
+
+        System.out.println("Number of vertex : " + listCity.size());
+        System.out.println("Number of Edge : " + nbEdge);
+    }
+
 
     public void writeFile(int dmax, int popmin) throws IOException {
 
@@ -127,12 +171,6 @@ public class CSVtoTXT {
                 }
             }
         }
-        /*
-        Path path = Paths.get("files\\" + filename);
-        List<String> lines = Files.readAllLines(path);
-        lines.add(2, "Number of edges : " + nbEdge);
-        Files.write(path, lines);
-        */
         fw.flush();
         fw.close();
 

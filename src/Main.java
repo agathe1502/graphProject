@@ -1,22 +1,23 @@
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLOutput;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
 
 
-        int dmax = 50;
-        int popmin = 5000;
-        int srcVertex = 1;
+        int dmax = 10000;
+        int popmin = 150000;
+        int srcVertex = 8;
         int endVertex = 50;
 
-        createdFile(dmax, popmin);
-        dijkstra(dmax, popmin, srcVertex, endVertex);
-        dijkstraFibo(dmax, popmin, srcVertex, endVertex);
+        //createdFile(dmax, popmin);
+        //dijkstra(dmax, popmin, srcVertex, endVertex);
+        //dijkstraFibo(dmax, popmin, srcVertex, endVertex);
         //VRP1();
-        Astar(dmax, popmin, srcVertex, endVertex);
-
+        //Astar(dmax, popmin, srcVertex, endVertex);
+        VRP2(popmin, srcVertex);
     }
 
     private static void createdFile (int dmax, int popmin) throws IOException {
@@ -100,6 +101,25 @@ public class Main {
         vrp.runAlgorithm();
         System.out.println("-------------------");
         vrp.displayResults();
+    }
+
+    private static void VRP2(int popmin, int srcVertex) throws IOException {
+        CSVtoTXT fileCSV = new CSVtoTXT();
+        fileCSV.fileConversion(0, popmin, false);
+
+        if (popmin == 100000 || popmin == 150000 || popmin == 200000){
+            String filename = "src/files/File_VRP2_" + popmin + ".txt";
+            Graph graph = new Graph(filename);
+            graph.createAdjacentList();
+
+            VRP2 vpr = new VRP2(graph, graph.getVertices().get(srcVertex));
+            System.out.println("-------------------");
+            vpr.runAlgorithm();
+        }
+        else {
+            System.out.println("La valeur de la population minimum n'est pas correcte, elle doit valoir soit 100000, 150000 ou 200000");
+        }
+
     }
 
 }

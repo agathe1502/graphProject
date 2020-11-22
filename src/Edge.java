@@ -1,5 +1,5 @@
 /**
- * Classe qui permet de créer un sommet.
+ * Classe qui permet de créer un arc.
  */
 public class Edge {
 
@@ -8,11 +8,11 @@ public class Edge {
      */
     private final int id;
     /**
-     * Id du sommet de départ dans le graphe
+     * Id du sommet de départ de l'arc dans le graphe
      */
     private final int initialVertex;
     /**
-     * Id du sommet final dans le graphe
+     * Id du sommet final de l'arc dans le graphe
      */
     private final int finalVertex;
     /**

@@ -14,7 +14,7 @@ public abstract class DijkstraAlgorithm extends ShortestPathAlgorithm {
      */
     protected static ArrayList<Vertex> vertices;
     /**
-     * Les sommets non traités du graphe (ceux dont on ne connais pas encore la distance la plus courte)
+     * Les sommets non traités du graphe (ceux dont on ne connait pas encore la distance la plus courte)
      */
     protected static ArrayList<Vertex> Z;
     /**
@@ -50,7 +50,7 @@ public abstract class DijkstraAlgorithm extends ShortestPathAlgorithm {
     /**
      * Méthode qui permet de lancer l'algorithme de Dijkstra.
      * - Phase d'initialisation
-     * - Phase qui analyse chaque sommets dont la distance la plus courte n'a pas été trouvée
+     * - Phase qui analyse chaque sommet dont la distance la plus courte n'a pas été trouvée
      *
      * @return le tableau des plus courtes distances (par rapport au sommet de départ) déterminées par l'algorithme
      */
@@ -61,7 +61,7 @@ public abstract class DijkstraAlgorithm extends ShortestPathAlgorithm {
     }
 
     /**
-     * Méthode qui permet de retrouver la plus courte distance d'un sommet par rapport au seommet de départ
+     * Méthode qui permet de retrouver la plus courte distance d'un sommet par rapport au sommet de départ
      *
      * @param endVertex le sommet dont on veut la distance
      * @return la distance du plus court chemin du sommet de départ à un sommet donné
@@ -76,7 +76,7 @@ public abstract class DijkstraAlgorithm extends ShortestPathAlgorithm {
     protected abstract void initialization();
 
     /**
-     * Phase qui boucle sur la liste des sommets dont la distance la plus court n'est pas encore determinée.
+     * Phase qui boucle sur la liste des sommets dont la distance la plus courte n'est pas encore determinée.
      */
     protected abstract void analyzeUnmarkedVertices();
 
