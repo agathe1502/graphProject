@@ -137,6 +137,9 @@ public class Graph {
         return edges2;
     }
 
+    private CSVtoTXT fileCSV;
+
+
     /**
      * Permet d'obtenir la valeur d'un arc à partir de ses deux sommets
      *
@@ -286,5 +289,13 @@ public class Graph {
             System.out.println(e.getMessage());
         }
 
+    }
+
+    public void setFileCSV(CSVtoTXT fileCSV){
+        this.fileCSV = fileCSV;
+    }
+
+    public CSVtoTXT getFileCSV() {
+        return fileCSV;
     }
 }

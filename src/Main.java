@@ -1,11 +1,15 @@
+import io.vertx.core.Vertx;
+
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLOutput;
 
 public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        System.out.println("Démarrage de l'application");
+        final Vertx vertx = Vertx.vertx();
+        vertx.deployVerticle(new MyApiVerticle());
 
         int dmax = 10000;
         int popmin = 150000;
@@ -17,10 +21,10 @@ public class Main {
         //dijkstraFibo(dmax, popmin, srcVertex, endVertex);
         //VRP1();
         //Astar(dmax, popmin, srcVertex, endVertex);
-        VRP2(popmin, srcVertex);
+        //VRP2(popmin, srcVertex);
     }
 
-    private static void createdFile (int dmax, int popmin) throws IOException {
+    private static void createdFile(int dmax, int popmin) {
         CSVtoTXT fileCSV = new CSVtoTXT();
 
         String fileName = "src/files/Communes_" + dmax + "_" + popmin + ".txt";
@@ -28,7 +32,7 @@ public class Main {
         fileCSV.fileConversion(dmax, popmin, !file.isFile());
     }
 
-    private static Graph initializeDijkstra(int dmax, int popmin) throws IOException {
+    private static Graph initializeDijkstra(int dmax, int popmin) {
         CSVtoTXT fileCSV = new CSVtoTXT();
 
         String fileName = "src/files/Communes_" + dmax + "_" + popmin + ".txt";
@@ -41,7 +45,7 @@ public class Main {
         return graph;
     }
 
-    private static void dijkstra(int dmax, int popmin, int srcVertex, int endVertex) throws IOException {
+    private static void dijkstra(int dmax, int popmin, int srcVertex, int endVertex) {
 
         Graph graph = initializeDijkstra(dmax, popmin);
 
@@ -57,7 +61,7 @@ public class Main {
         System.out.println("Distance : " + d.getDistance(graph.getVertices().get(endVertex)) + " km");
     }
 
-    private static void dijkstraFibo(int dmax, int popmin, int srcVertex, int endVertex) throws IOException {
+    private static void dijkstraFibo(int dmax, int popmin, int srcVertex, int endVertex) {
 
         Graph graph = initializeDijkstra(dmax, popmin);
 
@@ -73,7 +77,7 @@ public class Main {
         System.out.println("Distance : " + df.getDistance(graph.getVertices().get(endVertex)) + " km");
     }
 
-    private static void Astar(int dmax, int popmin, int srcVertex, int endVertex) throws IOException {
+    private static void Astar(int dmax, int popmin, int srcVertex, int endVertex) {
         CSVtoTXT fileCSV = new CSVtoTXT();
 
         // boolean createFile = existance de fileName
@@ -103,11 +107,11 @@ public class Main {
         vrp.displayResults();
     }
 
-    private static void VRP2(int popmin, int srcVertex) throws IOException {
+    private static void VRP2(int popmin, int srcVertex) {
         CSVtoTXT fileCSV = new CSVtoTXT();
         fileCSV.fileConversion(0, popmin, false);
 
-        if (popmin == 100000 || popmin == 150000 || popmin == 200000){
+        if (popmin == 100000 || popmin == 150000 || popmin == 200000) {
             String filename = "src/files/File_VRP2_" + popmin + ".txt";
             Graph graph = new Graph(filename);
             graph.createAdjacentList();
@@ -115,8 +119,7 @@ public class Main {
             VRP2 vpr = new VRP2(graph, graph.getVertices().get(srcVertex));
             System.out.println("-------------------");
             vpr.runAlgorithm();
-        }
-        else {
+        } else {
             System.out.println("La valeur de la population minimum n'est pas correcte, elle doit valoir soit 100000, 150000 ou 200000");
         }
 

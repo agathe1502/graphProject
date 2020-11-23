@@ -1,9 +1,12 @@
+import models.CityModel;
+import models.VRP1Model;
 import org.jgrapht.util.FibonacciHeap;
 import org.jgrapht.util.FibonacciHeapNode;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Classe qui représente un VRP qui doit se rendre chaque jour dans une grande ville.
@@ -38,10 +41,11 @@ public class VRP1 {
      *
      * @throws IOException
      */
-    public void runAlgorithm() throws IOException {
+    public void runAlgorithm() {
         // Read the file to create the adjacent list
         CSVtoTXT fileCSV = new CSVtoTXT();
         fileCSV.fileConversion(0, 0, false);
+        graph.setFileCSV(fileCSV);
         graph.createAdjacentListVRP1(fileCSV.getPopulations(), 200000);
 
         // Given
@@ -82,10 +86,18 @@ public class VRP1 {
      * - La distance à vol d'oiseau avec chacune des grandes villes
      * - La distance moyenne pour aller vers chacune de ces villes
      */
-    public void displayResults() {
+    public VRP1Model displayResults() {
         int cityId = averages.min().getData();
         ArrayList<Edge> edges = graph.getEdges();
         ArrayList<Vertex> vertices = graph.getVertices();
+
+        CSVtoTXT fileCSV = graph.getFileCSV();
+
+        CityModel cityToLive = new CityModel(cityId,graph.getVertices().get(cityId).getName(),
+                fileCSV.getPopulations().get(cityId), fileCSV.getCoordinates().get(cityId)[0], fileCSV.getCoordinates().get(cityId)[1]);
+
+        List<CityModel> bigCities = new ArrayList<>();
+        List<Double> avList = new ArrayList<>();
 
         System.out.println("The VRP should live in " + graph.getVertices().get(cityId).getName());
         int loop = 0;
@@ -98,6 +110,10 @@ public class VRP1 {
                 if (value == -1) {
                     value = graph.getValueByVertices(vertices.get(e.getFinalVertex()), vertices.get(e.getInitialVertex()));
                 }
+                bigCities.add(new CityModel(otherVertex,graph.getVertices().get(otherVertex).getName(),
+                        fileCSV.getPopulations().get(otherVertex), fileCSV.getCoordinates().get(otherVertex)[0],
+                        fileCSV.getCoordinates().get(otherVertex)[1]));
+                avList.add(value);
                 System.out.println("- " + vertices.get(otherVertex).getName() + " : " + value + " km");
 
             }
@@ -105,5 +121,6 @@ public class VRP1 {
         }
         System.out.println("--> Average : " + String.format("%.2f", averages.min().getKey()) + " km");
 
+        return new VRP1Model(bigCities, avList,cityToLive, averages.min().getKey());
     }
 }

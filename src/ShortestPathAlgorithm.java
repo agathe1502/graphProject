@@ -1,3 +1,5 @@
+import models.CityModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -24,6 +26,19 @@ public abstract class ShortestPathAlgorithm {
         while (pathArray[v.getId()] != null) {
             v = pathArray[v.getId()];
             path.add(v.getName());
+        }
+        Collections.reverse(path);
+        return path;
+    }
+
+    public ArrayList<CityModel> getPathModel(Vertex endVertex, Graph graph) {
+        ArrayList<CityModel> path = new ArrayList<>();
+        CSVtoTXT fileCSV = graph.getFileCSV();
+        Vertex v = endVertex;
+        path.add(new CityModel(endVertex.getId(), endVertex.getName(), fileCSV.getPopulations().get(endVertex.getId()),fileCSV.getCoordinates().get(endVertex.getId())[0],fileCSV.getCoordinates().get(endVertex.getId())[1]));
+        while(pathArray[v.getId()] != null){
+            v = pathArray[v.getId()];
+            path.add(new CityModel(v.getId(), v.getName(), fileCSV.getPopulations().get(v.getId()),fileCSV.getCoordinates().get(v.getId())[0],fileCSV.getCoordinates().get(v.getId())[1]));
         }
         Collections.reverse(path);
         return path;

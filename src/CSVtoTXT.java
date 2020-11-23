@@ -1,3 +1,5 @@
+import models.CityModel;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -6,6 +8,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CSVtoTXT {
 
@@ -14,19 +17,24 @@ public class CSVtoTXT {
     private HashMap<Integer, Integer> populations;
 
 
-    public void fileConversion(int dmax, int popmin, boolean createFile) throws IOException {
+    public void fileConversion(int dmax, int popmin, boolean createFile) {
         coordinates = new HashMap<>();
         populations = new HashMap<>();
 
-        System.out.println("File is converting ...");
-        readFile(popmin);
-        if (createFile) {
-            writeFile(dmax, popmin);
-            // writeFileVRP1();
-            // writeFileVRP2(popmin);
-        } else {
-            createCoordinates();
+        try{
+            System.out.println("File is converting ...");
+            readFile(popmin);
+            if (createFile) {
+                writeFile(dmax, popmin);
+                // writeFileVRP1();
+                // writeFileVRP2(popmin);
+            } else {
+                createCoordinates();
+            }
+        }catch (IOException e){
+            System.out.println(e.getMessage());
         }
+
 
 
     }
@@ -104,7 +112,7 @@ public class CSVtoTXT {
             double lon1 = Math.toRadians(longitude);
             double lat1 = Math.toRadians(latitude);
             coordinates.put(i, new double[]{longitude, latitude});
-            for (int j = 0; j < listCity.size(); j++) {
+            for (int j = i +1 ; j < listCity.size(); j++) {
                 double lon2 = Math.toRadians(Double.parseDouble(listCity.get(j)[4]));
                 double lat2 = Math.toRadians(Double.parseDouble(listCity.get(j)[5]));
 
@@ -114,11 +122,8 @@ public class CSVtoTXT {
                 } else {
                     d = 0;
                 }
-                if (i != j) {
-                    fw.write(nbEdge + " " + i + " " + j + " " + df.format(d) + "\n");
-                    nbEdge++;
-                }
-
+                fw.write(nbEdge + " " + i + " " + j + " " + df.format(d) + "\n");
+                nbEdge++;
             }
         }
         fw.flush();
@@ -226,6 +231,14 @@ public class CSVtoTXT {
 
     public HashMap<Integer, Integer> getPopulations() {
         return populations;
+    }
+
+    public List<CityModel> getListCitiesModel(){
+        List<CityModel> citiesModel = new ArrayList<>();
+        for (int i = 0; i < listCity.size(); i++){
+            citiesModel.add(new CityModel(i,listCity.get(i)[1],Integer.parseInt(listCity.get(i)[3]),Double.parseDouble(listCity.get(i)[4]),Double.parseDouble(listCity.get(i)[5])));
+        }
+        return citiesModel;
     }
 
 }
