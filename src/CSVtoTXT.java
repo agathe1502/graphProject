@@ -12,11 +12,29 @@ import java.util.List;
 
 public class CSVtoTXT {
 
+    /**
+     * Hashmap pour les coordonnées
+     */
     private HashMap<Integer, double[]> coordinates;
+    /**
+     * Liste des villes
+     */
     private ArrayList<String[]> listCity;
+    /**
+     * Hashmap pour la population
+     */
     private HashMap<Integer, Integer> populations;
 
-
+    /**
+     * Méthode qui permet la conversion d'un fichier CVS à un fichier TXT
+     * - Lecture du fichier CSV
+     * - Si le fichier n'existe pas, création du fichier TXT
+     * - Sinon on remplit la hashmap des coordonnées
+     *
+     * @param dmax distance maximum entre 2 villes pour créer une liaison
+     * @param popmin population minimum que doit avoir une ville pour la garder
+     * @param createFile true si le fichier est déjà créé, sinon faux
+     */
     public void fileConversion(int dmax, int popmin, boolean createFile) {
         coordinates = new HashMap<>();
         populations = new HashMap<>();
@@ -39,6 +57,11 @@ public class CSVtoTXT {
 
     }
 
+    /**
+     * Méthode qui permet d'écrire le fichier TXT pour le VRP1
+     * Prend en compte une condition sur la population des villes afin de créer un arc
+     * @throws IOException
+     */
     private void writeFileVRP1() throws IOException {
         String filename = "File_VRP1.txt";
         FileWriter fw = new FileWriter("src/files/" + filename);
@@ -88,6 +111,12 @@ public class CSVtoTXT {
 
     }
 
+    /**
+     * Méthode qui permet d'écrire le fichier TXT pour le VRP2
+     * Tous les arcs entre toutes les villes sont créés, il n'y a aucune condition sur leur création
+     * @param popmin population minimum qu'une ville doit posséder
+     * @throws IOException
+     */
     private void writeFileVRP2(int popmin) throws IOException {
         String filename = "File_VRP2_" + popmin + ".txt";
         FileWriter fw = new FileWriter("src/files/" + filename);
@@ -112,7 +141,7 @@ public class CSVtoTXT {
             double lon1 = Math.toRadians(longitude);
             double lat1 = Math.toRadians(latitude);
             coordinates.put(i, new double[]{longitude, latitude});
-            for (int j = i +1 ; j < listCity.size(); j++) {
+            for (int j = i + 1 ; j < listCity.size(); j++) {
                 double lon2 = Math.toRadians(Double.parseDouble(listCity.get(j)[4]));
                 double lat2 = Math.toRadians(Double.parseDouble(listCity.get(j)[5]));
 
@@ -133,7 +162,13 @@ public class CSVtoTXT {
         System.out.println("Number of Edge : " + nbEdge);
     }
 
-
+    /**
+     * Méthode qui permet d'écrire le fichier TXT de manière générale pour les autres algorithmes
+     * Les arcs sont écrits si leurs valeurs sont inférieurs a dmax
+     * @param dmax
+     * @param popmin
+     * @throws IOException
+     */
     public void writeFile(int dmax, int popmin) throws IOException {
 
         String filename = "Communes_" + dmax + "_" + popmin + ".txt";
@@ -184,6 +219,12 @@ public class CSVtoTXT {
 
     }
 
+    /**
+     * Méthode qui permet de lire le fichier CSV
+     * Elle trie les villes suivant leur population (popmin) et les ajoute à la liste
+     * @param popmin population minimum requise pour garder une ville
+     * @throws IOException
+     */
     private void readFile(int popmin) throws IOException {
         String[] city;
         listCity = new ArrayList<>();
@@ -217,6 +258,9 @@ public class CSVtoTXT {
 
     }
 
+    /**
+     * Méthode qui permet de remplir le tableau des coordonnées pour chaque ville de la liste
+     */
     private void createCoordinates() {
         for (int i = 0; i < listCity.size(); i++) {
             double longitude = Double.parseDouble(listCity.get(i)[4]);
@@ -225,10 +269,18 @@ public class CSVtoTXT {
         }
     }
 
+    /**
+     * Retourne la hashmap contenant les coordonnées (longitude et latitude)
+     * @return hashmap des coordonnées
+     */
     public HashMap<Integer, double[]> getCoordinates() {
         return coordinates;
     }
 
+    /**
+     * Retourne la hashmap contenant les population de chaque ville
+     * @return hashmap des populations des villes
+     */
     public HashMap<Integer, Integer> getPopulations() {
         return populations;
     }

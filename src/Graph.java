@@ -228,7 +228,7 @@ public class Graph {
     /**
      * Même principe que pour createAdjacentList, mais en prenant en compte la population des villes sommets
      * On ajoute tous les sommets dans la liste d'adjacence.
-     * On lie a ces sommets seulement les ids des arcs qui ont un sommet de plus de "minPop" habitants
+     * On lie a ces sommets seulement les ids des arcs qui ont un sommet de plus de "popmin" habitants
      *
      * @param populations une HashMap avec en clé l'id de la ville, et en valeur son nombre d'habitants
      * @param minPop      le nombre d'habitants minimum pour pouvoir ajouter l'arc à la liste d'adjacence.
