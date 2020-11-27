@@ -9,10 +9,12 @@ import models.ShortestPathAlgorithmModel;
 import models.VRP1Model;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MyApiVerticle extends AbstractVerticle {
+public class ApiClass extends AbstractVerticle {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MyApiVerticle.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiClass.class);
     private final AlgorithmService algorithmService = new AlgorithmService();
 
     private GsonBuilder builder;
@@ -47,6 +49,8 @@ public class MyApiVerticle extends AbstractVerticle {
                 .handler(this::createFile);
         router.get("/api/vrp1")
                 .handler(this::VRP1);
+        router.get("/api/vrp2/:popmin/:srcVertex")
+                .handler(this::VRP2);
 
         // Lancement du serveur
         vertx.createHttpServer()
@@ -61,35 +65,43 @@ public class MyApiVerticle extends AbstractVerticle {
     }
 
 
-    private int[] getParamShortestPathAlgorithm(RoutingContext routingContext) {
-        final int dmax = Integer.parseInt(routingContext.request().getParam("dmax"));
+    private List<Integer> getParamShortestPathAlgorithm(RoutingContext routingContext) {
+        List<Integer> params = new ArrayList<>();
+        if(routingContext.request().getParam("dmax") != null) {
+            final int dmax = Integer.parseInt(routingContext.request().getParam("dmax"));
+            params.add(dmax);
+        }
         final int popmin = Integer.parseInt(routingContext.request().getParam("popmin"));
+        params.add(popmin);
         if(routingContext.request().getParam("srcVertex") != null){
             final int srcVertex = Integer.parseInt(routingContext.request().getParam("srcVertex"));
-            final int endVertex = Integer.parseInt(routingContext.request().getParam("endVertex"));
-            return new int[]{dmax, popmin, srcVertex, endVertex};
+            params.add(srcVertex);
         }
-        return new int[]{dmax, popmin};
+        if(routingContext.request().getParam("endVertex") != null){
+            final int endVertex = Integer.parseInt(routingContext.request().getParam("endVertex"));
+            params.add(endVertex);
+        }
+        return params;
 
     }
 
     private void dijkstra(RoutingContext routingContext) {
-        int[] params = getParamShortestPathAlgorithm(routingContext);
-        final ShortestPathAlgorithmModel model = algorithmService.runDijkstra(params[0], params[1], params[2], params[3]);
+        List<Integer> params = getParamShortestPathAlgorithm(routingContext);
+        final ShortestPathAlgorithmModel model = algorithmService.runDijkstra(params.get(0), params.get(1), params.get(2), params.get(3));
         setCorsPolicy(routingContext, model);
 
     }
 
     private void dijkstraFibo(RoutingContext routingContext) {
-        int[] params = getParamShortestPathAlgorithm(routingContext);
-        final ShortestPathAlgorithmModel model = algorithmService.runDijkstraFibo(params[0], params[1], params[2], params[3]);
+        List<Integer> params = getParamShortestPathAlgorithm(routingContext);
+        final ShortestPathAlgorithmModel model = algorithmService.runDijkstraFibo(params.get(0), params.get(1), params.get(2), params.get(3));
         setCorsPolicy(routingContext, model);
 
     }
 
     private void astar(RoutingContext routingContext) {
-        int[] params = getParamShortestPathAlgorithm(routingContext);
-        final ShortestPathAlgorithmModel model = algorithmService.runAstar(params[0], params[1], params[2], params[3]);
+        List<Integer> params = getParamShortestPathAlgorithm(routingContext);
+        final ShortestPathAlgorithmModel model = algorithmService.runAstar(params.get(0), params.get(1), params.get(2), params.get(3));
         setCorsPolicy(routingContext, model);
     }
 
@@ -100,13 +112,20 @@ public class MyApiVerticle extends AbstractVerticle {
 
     }
 
-    private void createFile(RoutingContext routingContext) {
-        int[] params = getParamShortestPathAlgorithm(routingContext);
+    private void VRP2(RoutingContext routingContext) {
+        List<Integer> params = getParamShortestPathAlgorithm(routingContext);
 
+        final ShortestPathAlgorithmModel vrp2Model = algorithmService.runVRP2(params.get(0), params.get(1));
+        setCorsPolicy(routingContext, vrp2Model);
+
+    }
+
+    private void createFile(RoutingContext routingContext) {
+        List<Integer> params = getParamShortestPathAlgorithm(routingContext);
         CSVtoTXT fileCSV = new CSVtoTXT();
-        String fileName = "src/files/Communes_" + params[0] + "_" + params[1] + ".txt";
+        String fileName = "src/files/Communes_" + params.get(0) + "_" + params.get(1) + ".txt";
         File file = new File(fileName);
-        fileCSV.fileConversion(params[0], params[1], !file.isFile());
+        fileCSV.fileConversion(params.get(0), params.get(1), !file.isFile());
 
         setCorsPolicy(routingContext, fileCSV.getListCitiesModel());
 

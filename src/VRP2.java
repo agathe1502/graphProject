@@ -1,3 +1,5 @@
+import models.CityModel;
+
 import java.util.ArrayList;
 
 /**
@@ -102,4 +104,17 @@ public class VRP2 {
         System.out.print("]");
     }
 
+    public ArrayList<CityModel> getCycle() {
+        ArrayList<CityModel> path = new ArrayList<>();
+        CSVtoTXT fileCSV = graph.getFileCSV();
+        for (Vertex vertex : cycle) {
+            path.add(new CityModel(vertex.getId(), vertex.getName(), fileCSV.getPopulations().get(vertex.getId()),
+                    fileCSV.getCoordinates().get(vertex.getId())[0],fileCSV.getCoordinates().get(vertex.getId())[1]));
+        }
+        return path;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
 }

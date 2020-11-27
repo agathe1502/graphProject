@@ -9,7 +9,7 @@ public class Main {
 
         System.out.println("Démarrage de l'application");
         final Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new MyApiVerticle());
+        vertx.deployVerticle(new ApiClass());
 
         int dmax = 10000;
         int popmin = 150000;

@@ -1,7 +1,9 @@
+import models.CityModel;
 import models.ShortestPathAlgorithmModel;
 import models.VRP1Model;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 public class AlgorithmService {
@@ -99,6 +101,27 @@ public class AlgorithmService {
         vrp.runAlgorithm();
         System.out.println("-------------------");
         return vrp.displayResults();
+
+    }
+
+    public ShortestPathAlgorithmModel runVRP2(int popmin, int srcVertex){
+        CSVtoTXT fileCSV = new CSVtoTXT();
+        fileCSV.fileConversion(0, popmin, false);
+
+        String filename = "src/files/File_VRP2_" + popmin + ".txt";
+        Graph graph = new Graph(filename);
+        graph.setFileCSV(fileCSV);
+        graph.createAdjacentList();
+
+        VRP2 vrp = new VRP2(graph, graph.getVertices().get(srcVertex));
+        System.out.println("-------------------");
+        long startTime = System.nanoTime();
+        vrp.runAlgorithm();
+        long endTime = System.nanoTime();
+        long timeElapsed = endTime - startTime;
+        final ArrayList<CityModel> cycle = vrp.getCycle();
+        return new ShortestPathAlgorithmModel(vrp.getDistance(), (timeElapsed / 1000000.0), cycle);
+
 
     }
 }
