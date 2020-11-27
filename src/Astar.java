@@ -98,7 +98,7 @@ public class Astar extends ShortestPathAlgorithm {
 
     /**
      * Méthode qui permet l'initialisation de l'algorithme
-     * - le sommet de départ est ajoputé à la liste ouverte et marqué comme traiter
+     * - le sommet de départ est ajouté à la liste ouverte et marqué comme traiter
      * - pour chaque sommet, on remplit les tableaux G, H et F
      *
      * G : on récupère la valeur de l'arc entre le sommet initial et le sommet v
@@ -181,7 +181,7 @@ public class Astar extends ShortestPathAlgorithm {
 
     /**
      * Méthode qui permet d'analyser les arcs adjacents à un sommet donné.
-     * Elle permet aussi de mettre à jour la distance G grâce aux valeurs des arcs suiavnt le chemin partant du sommet initial au sommet courant
+     * Elle permet aussi de mettre à jour la distance G grâce aux valeurs des arcs suivant le chemin partant du sommet initial au sommet courant
      * @param min l'id du sommet non traité qui a la valeur de la fonction d'évaluation la plus faible
      */
     private void analyzeAdjacentsEdges(int min) {
