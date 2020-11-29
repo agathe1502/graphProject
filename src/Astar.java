@@ -110,7 +110,8 @@ public class Astar extends ShortestPathAlgorithm {
         isUsedTab[startVertex.getId()] = true;
 
         for (Vertex v : vertices) {
-            g[v.getId()] = getValueDistance(startVertex, v);
+            //g[v.getId()] = getValueDistance(startVertex, v);
+            g[v.getId()] = getValueDistance(startVertex, v) != -1 ? getValueDistance(startVertex, v) : Double.POSITIVE_INFINITY;
             h[v.getId()] = distance(v, endVertex);
             f[v.getId()] = g[v.getId()] + h[v.getId()];
         }
@@ -216,9 +217,15 @@ public class Astar extends ShortestPathAlgorithm {
      * @return la valeur de la distance entre les deux sommets
      */
     private double getValueDistance(Vertex vertex1, Vertex vertex2) {
-        double value = graph.getValueByVertices(vertex1, vertex2);
-        if (value == -1) {
-            value = graph.getValueByVertices(vertex2, vertex1);
+        double value;
+        if (vertex1.equals(vertex2)) {
+            value = 0;
+        }
+        else {
+            value = graph.getValueByVertices(vertex1, vertex2);
+            if (value == -1) {
+                value = graph.getValueByVertices(vertex2, vertex1);
+            }
         }
         return value;
     }

@@ -9,18 +9,18 @@ public class Main {
 
         System.out.println("Démarrage de l'application");
         final Vertx vertx = Vertx.vertx();
-        vertx.deployVerticle(new ApiClass());
+        //vertx.deployVerticle(new ApiClass());
 
-        int dmax = 10000;
-        int popmin = 150000;
-        int srcVertex = 8;
-        int endVertex = 50;
+        int dmax = 10;
+        int popmin = 5000;
+        int srcVertex = 5;
+        int endVertex = 6;
 
         //createdFile(dmax, popmin);
         //dijkstra(dmax, popmin, srcVertex, endVertex);
         //dijkstraFibo(dmax, popmin, srcVertex, endVertex);
         //VRP1();
-        //Astar(dmax, popmin, srcVertex, endVertex);
+        Astar(dmax, popmin, srcVertex, endVertex);
         //VRP2(popmin, srcVertex);
     }
 
