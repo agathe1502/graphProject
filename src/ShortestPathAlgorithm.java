@@ -31,6 +31,12 @@ public abstract class ShortestPathAlgorithm {
         return path;
     }
 
+    /**
+     * Méthode qui permet d'obtenir le chemin avec les villes sous forme de modèle
+     * @param endVertex la ville d'arrivée
+     * @param graph le graphe
+     * @return la liste des villes traversées sous forme de modèle.
+     */
     public ArrayList<CityModel> getPathModel(Vertex endVertex, Graph graph) {
         ArrayList<CityModel> path = new ArrayList<>();
         CSVtoTXT fileCSV = graph.getFileCSV();

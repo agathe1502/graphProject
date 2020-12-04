@@ -3,7 +3,6 @@ import models.VRP1Model;
 import org.jgrapht.util.FibonacciHeap;
 import org.jgrapht.util.FibonacciHeapNode;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +38,6 @@ public class VRP1 {
      * - Création de la liste d'adjacence
      * - Calcul des moyennes pour aller de chacune des communes vers chacune des grandes villes.
      *
-     * @throws IOException
      */
     public void runAlgorithm() {
         // Read the file to create the adjacent list
@@ -74,7 +72,7 @@ public class VRP1 {
     /**
      * Retourne le graphe utilisé par l'algorithme
      *
-     * @return
+     * @return le graphe utilisé par l'algorithme
      */
     public Graph getGraph() {
         return graph;

@@ -291,10 +291,18 @@ public class Graph {
 
     }
 
+    /**
+     * Méthode qui ajoute un fichier CSV à un graphe
+     * @param fileCSV le fichier CSV
+     */
     public void setFileCSV(CSVtoTXT fileCSV){
         this.fileCSV = fileCSV;
     }
 
+    /**
+     * Méthode qui retourne le fichier CSV du graphe
+     * @return le fichier CSV
+     */
     public CSVtoTXT getFileCSV() {
         return fileCSV;
     }

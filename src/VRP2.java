@@ -104,6 +104,10 @@ public class VRP2 {
         System.out.print("]");
     }
 
+    /**
+     * Méthode qui permet d'avoir le cycle obtenu sous forme de villes modèles
+     * @return les villes traversées
+     */
     public ArrayList<CityModel> getCycle() {
         ArrayList<CityModel> path = new ArrayList<>();
         CSVtoTXT fileCSV = graph.getFileCSV();
@@ -114,6 +118,10 @@ public class VRP2 {
         return path;
     }
 
+    /**
+     * Retourne la distance déterminée
+     * @return la distance
+     */
     public double getDistance() {
         return distance;
     }

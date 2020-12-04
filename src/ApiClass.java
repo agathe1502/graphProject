@@ -12,16 +12,34 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe qui génère le serveur avec les différenres routes à appeler pour obtenir les résultats sur l'interface graphique
+ */
 public class ApiClass extends AbstractVerticle {
 
+    /**
+     * Instance qui permet d'afficher les Logs
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(ApiClass.class);
+    /**
+     * Instance de la classe AlgorithmService pour pouvoir lancer les algorithmes
+     */
     private final AlgorithmService algorithmService = new AlgorithmService();
 
+    /**
+     * Builder gson pour transformer un objet en JSON
+     */
     private GsonBuilder builder;
+    /**
+     * Objet transformée en JSON
+     */
     private Gson gson;
 
 
-    // Quand le verticle se lance
+    /**
+     * Méthode appelée au démarrage du serveur
+     * Définition des différentes routes dans cette méthode
+     */
     @Override
     public void start() {
         LOGGER.info("Démarrage du serveur");
@@ -58,13 +76,20 @@ public class ApiClass extends AbstractVerticle {
                 .listen(8080);
     }
 
-    // Quand le verticle s'arrête
+    /**
+     * Appelée à la fermeture du serveur
+     */
     @Override
     public void stop() {
         LOGGER.info("Fermeture du serveur");
     }
 
 
+    /**
+     * Méthode qui permet de récupérer les paramètres d'une URL en GET
+     * @param routingContext le routingContext
+     * @return la liste des paramètres
+     */
     private List<Integer> getParamShortestPathAlgorithm(RoutingContext routingContext) {
         List<Integer> params = new ArrayList<>();
         if(routingContext.request().getParam("dmax") != null) {
@@ -85,6 +110,10 @@ public class ApiClass extends AbstractVerticle {
 
     }
 
+    /**
+     * Méthode qui lance l'algorithme de Dijkstra (à l'appel de la bonne route)
+     * @param routingContext le routing Context
+     */
     private void dijkstra(RoutingContext routingContext) {
         List<Integer> params = getParamShortestPathAlgorithm(routingContext);
         final ShortestPathAlgorithmModel model = algorithmService.runDijkstra(params.get(0), params.get(1), params.get(2), params.get(3));
@@ -92,6 +121,10 @@ public class ApiClass extends AbstractVerticle {
 
     }
 
+    /**
+     * Méthode qui lance l'algorithme de Dijkstra avec tas de Fibonacci (à l'appel de la bonne route)
+     * @param routingContext le routing Context
+     */
     private void dijkstraFibo(RoutingContext routingContext) {
         List<Integer> params = getParamShortestPathAlgorithm(routingContext);
         final ShortestPathAlgorithmModel model = algorithmService.runDijkstraFibo(params.get(0), params.get(1), params.get(2), params.get(3));
@@ -99,12 +132,20 @@ public class ApiClass extends AbstractVerticle {
 
     }
 
+    /**
+     * Méthode qui lance l'algorithme A* (à l'appel de la bonne route)
+     * @param routingContext le routing Context
+     */
     private void astar(RoutingContext routingContext) {
         List<Integer> params = getParamShortestPathAlgorithm(routingContext);
         final ShortestPathAlgorithmModel model = algorithmService.runAstar(params.get(0), params.get(1), params.get(2), params.get(3));
         setCorsPolicy(routingContext, model);
     }
 
+    /**
+     * Méthode qui lance l'algorithme du VRP1 (à l'appel de la bonne route)
+     * @param routingContext le routing Context
+     */
     private void VRP1(RoutingContext routingContext) {
 
         final VRP1Model vrp1Model = algorithmService.runVRP1();
@@ -112,6 +153,10 @@ public class ApiClass extends AbstractVerticle {
 
     }
 
+    /**
+     * Méthode qui lance l'algorithme du VRP2 (à l'appel de la bonne route)
+     * @param routingContext le routing Context
+     */
     private void VRP2(RoutingContext routingContext) {
         List<Integer> params = getParamShortestPathAlgorithm(routingContext);
 
@@ -120,6 +165,10 @@ public class ApiClass extends AbstractVerticle {
 
     }
 
+    /**
+     * Méthode qui crée le fichier du graphe (à l'appel de la bonne route)
+     * @param routingContext le routing Context
+     */
     private void createFile(RoutingContext routingContext) {
         List<Integer> params = getParamShortestPathAlgorithm(routingContext);
         CSVtoTXT fileCSV = new CSVtoTXT();
@@ -132,6 +181,11 @@ public class ApiClass extends AbstractVerticle {
 
     }
 
+    /**
+     * Méthode qui autorise les appels API et qui envoie la répons en JSON
+     * @param routingContext le routing Context
+     * @param model le model à transformer en JSON
+     */
     private void setCorsPolicy(RoutingContext routingContext, Object model){
         routingContext.response()
                 .putHeader("content-type", "application/json")
